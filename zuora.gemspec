@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
-  #s.extra_rdoc_files = [ "README.md" ]
+  s.extra_rdoc_files = [ "README.md" ]
 
   s.add_runtime_dependency "savon", ">= 0.9.8", "<= 1.1.0"
   s.add_runtime_dependency "activesupport", ">= 3.0.0", "< 4.0.0"
