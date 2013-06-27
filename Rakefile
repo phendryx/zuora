@@ -13,8 +13,7 @@ end
 
 namespace :spec do
   desc "Run LIVE integration specs"
-  RSpec::Core::RakeTask.new do |t|
-    t.name = 'integrations'
+  RSpec::Core::RakeTask.new(:integrations) do |t|
     t.pattern = "./spec/integration/*_spec.rb"
   end
 end
