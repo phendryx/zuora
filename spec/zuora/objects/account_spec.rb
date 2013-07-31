@@ -16,7 +16,9 @@ describe Zuora::Objects::Account do
        "default_payment_method_id", "id", "invoice_delivery_prefs_email", "invoice_delivery_prefs_print",
        "invoice_template_id", "last_invoice_date", "name", "notes", "payment_gateway", "payment_term",
        "purchase_order_number", "sales_rep_name", "sold_to_id", "status", "total_invoice_balance", 
-       "updated_by_id", "updated_date"]
+       "updated_by_id", "updated_date", "parent_id", "tax_exempt_certificate_id", "tax_exempt_certificate_type", 
+       "tax_exempt_description", "tax_exempt_effective_date", "tax_exempt_expiration_date", 
+       "tax_exempt_issuing_jurisdiction", "tax_exempt_status"].sort       
   end
 
   it "has read only attributes" do

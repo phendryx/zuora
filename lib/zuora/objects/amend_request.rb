@@ -73,6 +73,7 @@ module Zuora::Objects
     def generate_rate_plan_data(builder)
 
       self.plans_and_charges.each do |pandc|
+
         rate_plan = pandc[:rate_plan]
         charges = pandc[:charges]
 
