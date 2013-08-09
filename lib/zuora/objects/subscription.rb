@@ -31,7 +31,7 @@ module Zuora::Objects
       read_only :created_by_id, :created_date, :updated_by_id, :updated_date, :cancelled_date,
         :original_created_date, :original_id, :previous_subscription_id, :status,
         :subscription_end_date, :term_end_date, :version, :subscription_start_date
-
+        write_only :ancestor_account_id
       #defaults :auto_renew          => false,
       #         :initial_term        => 1,
       #         :is_invoice_separate => false,
