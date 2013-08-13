@@ -38,7 +38,7 @@ module Zuora::Objects
       return errors[ref] << "#{ref} must be provided" if obj.nil?
       obj = obj.is_a?(Array) ? obj : [obj]
       obj.each do |object|
-        if object.new_record? || object.changed?
+        if object.id.nil? && (object.new_record? || object.changed?)
           errors[ref] << "#{ref} is invalid" unless object.valid?
         end
       end
@@ -155,7 +155,7 @@ module Zuora::Objects
     end
 
     def generate_account(builder)
-      if account.new_record?
+      if account.new_record? && account.id.nil?
         account.to_hash.each do |k,v|
           builder.__send__(ons, k.to_s.zuora_camelize.to_sym, v) unless v.nil?
         end
