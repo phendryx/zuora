@@ -15,6 +15,10 @@ module Zuora::Associations
          klass = klass_name.constantize
          klass.where("#{self.remote_name}Id = '#{self.id}'")
         end
+        
+        define_method "#{klass_sym}=" do |obj|
+          self.attributes[klass_sym] = obj
+        end
       end
     end
 
