@@ -53,7 +53,15 @@ module Zuora::Objects
 
     def generate_amend_options(builder)
       amend_options.each do |k,v|
-        builder.__send__(zns, k.to_s.zuora_camelize.to_sym, v)
+        if (v.is_a? Hash)
+          builder.__send__(zns, k.to_s.zuora_camelize.to_sym) do
+            v.each do |sk,sv|
+              builder.__send__(zns, sk.to_s.zuora_camelize.to_sym, sv)
+            end
+          end
+        else
+          builder.__send__(zns, k.to_s.zuora_camelize.to_sym, v)
+        end
       end
     end
     
