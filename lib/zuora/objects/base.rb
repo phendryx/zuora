@@ -120,7 +120,9 @@ module Zuora::Objects
     end
 
     def save!
-      raise StandardError.new(self.errors.map.inspect) unless save
+      if !save
+        raise Zuora::Fault.new(self.errors[:base].first)
+      end
     end
 
     # create the record remotely
@@ -184,7 +186,7 @@ module Zuora::Objects
         @changed_attributes.clear
         return true
       else
-        self.errors.add(:base, result[:errors][:message])
+        self.errors.add(:base, result[:errors])
         return false
       end
     end

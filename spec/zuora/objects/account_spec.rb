@@ -158,7 +158,7 @@ describe Zuora::Objects::Account do
         a.status = 'Draft'
         a.should be_valid
         a.save.should == false
-        a.errors[:base].should include('The account number example-test-10 is invalid.')
+        a.errors[:base].first[:message].should include('The account number example-test-10 is invalid.')
         a.id.should be_nil
       end
     end
