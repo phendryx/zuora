@@ -15,8 +15,8 @@ module Zuora
     HTTPI.log = opts[:logger] ? true : false
     Savon.configure do |savon|
       savon.logger = opts[:logger]
-      savon.log = opts[:logger] ? true : false
       savon.pretty_print_xml = opts[:format_xml]
+      savon.soap_version = 2
     end
 
     if Api.instance.config.sandbox
@@ -99,12 +99,6 @@ module Zuora
     end
 
     private
-
-    def initialize
-      Savon.configure do |savon|
-        savon.soap_version = 2
-      end
-    end
 
     def make_client
       Savon::Client.new do
