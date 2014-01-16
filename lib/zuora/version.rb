@@ -2,12 +2,12 @@ require 'scanf'
 
 module Zuora
   class Version
-    MAJOR = 0
+    MAJOR = 1
     MINOR = 1
-    PATCH = "1g"
+    PATCH = 3
 
     def self.to_s
-      "#{MAJOR}.#{MINOR}.#{PATCH}"
+      "#{MAJOR}.#{MINOR}.#{PATCH}goodmouth"
     end
   end
 end
