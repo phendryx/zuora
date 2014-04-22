@@ -10,6 +10,8 @@ module Zuora::Objects
     
     has_many :rate_plan_charge_tiers
 
+    BILLING_PERIODS             = ['Month','Quarter','Annual','Semi-Annual','Specific Months']
+
     CHARGE_MODELS = [ 
       "Flat Fee Pricing",
       "Per Unit Pricing",
@@ -30,6 +32,7 @@ module Zuora::Objects
     )
     validates_numericality_of :bill_cycle_day, :only_integer => true, :greater_than_or_equal_to => 0, :less_than_or_equal_to => 31, :allow_nil => true
     validates_inclusion_of    :bill_cycle_type, :allow_nil => true, :in => %w(DefaultFromCustomer SpecificDayofMonth SubscriptionStartDay ChargeTriggerDay)
+    validates_inclusion_of    :billing_period, :in => BILLING_PERIODS
     validates_inclusion_of    :billing_period_alignment, :allow_nil => true, :in => %w(AlignToCharge AlignToSubscriptionStart AlignToTermStart)
     validates_datetime_of     :charged_through_date, :allow_nil => true
     validates_inclusion_of    :charge_model, :allow_nil => true, :in => CHARGE_MODELS
@@ -58,6 +61,7 @@ module Zuora::Objects
     validates_numericality_of :quantity, :allow_nil => true, :greater_than_or_equal_to => 0
     validates_numericality_of :rollover_balance, :allow_nil => true
     validates_numericality_of :segment, :integer_only => true, :greater_than_or_equal_to => 1
+    validates_numericality_of :specific_billing_period, :only_integer => true, :if => Proc.new { |rpc| rpc.billing_period == 'Specific Months' }
     validates_numericality_of :tcv
     validates_datetime_of     :trigger_date, :allow_nil => true
     validates_inclusion_of    :trigger_event, :in => %w(ContractEffective CustomerAcceptance ServiceActivation SpecificDate)
