@@ -39,7 +39,7 @@ module Zuora
     # @return [Zuora::Config]
     attr_accessor :config
 
-    WSDL = File.expand_path('../../../wsdl/zuora.a.49.0.wsdl', __FILE__)
+    WSDL = File.expand_path('../../../wsdl/zuora.a.55.0.wsdl', __FILE__)
 
     # Is this an authenticated session?
     # @return [Boolean]
@@ -50,7 +50,7 @@ module Zuora
     # Change client to sandbox url
     def sandbox!
       @client = nil
-      self.class.instance.client.wsdl.endpoint = "https://apisandbox.zuora.com/apps/services/a/49.0"
+      self.class.instance.client.wsdl.endpoint = "https://apisandbox.zuora.com/apps/services/a/55.0"
     end
 
     # The XML that was transmited in the last request
