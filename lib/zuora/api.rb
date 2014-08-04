@@ -14,6 +14,7 @@ module Zuora
     HTTPI.logger = opts[:logger]
     HTTPI.log = opts[:logger] ? true : false
     Savon.configure do |savon|
+      savon.log = opts[:logger] ? true : false
       savon.logger = opts[:logger]
       savon.pretty_print_xml = opts[:format_xml]
       savon.soap_version = 2

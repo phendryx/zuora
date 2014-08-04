@@ -1,7 +1,8 @@
-require 'bundler'
-Bundler.setup
+require "bundler/gem_tasks"
 require 'appraisal'
 require 'rspec/core/rake_task'
+
+Bundler.setup
 
 desc 'Default: run library specs.'
 task :default => :spec
