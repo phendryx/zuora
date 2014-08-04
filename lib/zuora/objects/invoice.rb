@@ -49,7 +49,10 @@ module Zuora::Objects
         :updated_date
       )
       write_only (
-                  :regenerate_invoice_pdf
+        :regenerate_invoice_pdf
+      )
+      defer(
+        :body
       )
       defaults(
         #:includes_one_time => true,
