@@ -1,5 +1,6 @@
 require 'singleton'
 require 'savon'
+require 'zuora/instrumentation'
 
 module Zuora
 
@@ -28,6 +29,7 @@ module Zuora
 
   class Api
     include Singleton
+    include Zuora::Instrumentation
 
     # @return [Savon::Client]
     def client
@@ -70,12 +72,14 @@ module Zuora
     def request(method, xml_body=nil, &block)
       authenticate! if !authenticated? || Zuora::Api.instance.config.login_on_every_request == true
 
-      response = client.request(method) do
-        soap.header = {'env:SessionHeader' => {'ins0:Session' => self.session.try(:key) }}
-        if block_given?
-          soap.body{|xml| yield xml }
-        else
-          soap.body = xml_body
+      instrument_service_call("Zuora", method.to_s) do
+        response = client.request(method) do
+          soap.header = {'env:SessionHeader' => {'ins0:Session' => self.session.try(:key) }}
+          if block_given?
+            soap.body{|xml| yield xml }
+          else
+            soap.body = xml_body
+          end
         end
       end
     rescue Savon::SOAP::Fault, IOError => e
