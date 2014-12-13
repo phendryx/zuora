@@ -33,12 +33,9 @@ describe Zuora::Objects::AmendRequest do
       end
 
       xml = Zuora::Api.instance.last_request
-      xml.should have_xml("//env:Body/#{zns}:amend/#{zns}:requests/#{zns}:Amendments/#{ons}:Type").
-        with_value('NewProduct')
-      xml.should have_xml("//env:Body/#{zns}:amend/#{zns}:requests/#{zns}:Amendments/#{ons}:Name").
-        with_value('Example Amendment 1')
-      xml.should have_xml("//env:Body/#{zns}:amend/#{zns}:requests/#{zns}:Amendments/#{ons}:RatePlanData/#{zns}:RatePlan/#{ons}:ProductRatePlanId").
-        with_value('4028e48834aa10a30134c50f40901ea7')
+      xml.should have_xml("//env:Body/#{zns}:amend/#{zns}:requests/#{zns}:Amendments/#{ons}:Type[text()='New Product']")
+      xml.should have_xml("//env:Body/#{zns}:amend/#{zns}:requests/#{zns}:Amendments/#{ons}:Name[text()='Example Amendment 1']")
+      xml.should have_xml("//env:Body/#{zns}:amend/#{zns}:requests/#{zns}:Amendments/#{ons}:RatePlanData/#{zns}:RatePlan/#{ons}:ProductRatePlanId[text()='4028e48834aa10a30134c50f40901ea7']")
     end
 
     it "handles applying amend failures messages" do
@@ -62,8 +59,7 @@ describe Zuora::Objects::AmendRequest do
       end
 
       xml = Zuora::Api.instance.last_request
-      xml.should have_xml("//env:Body/#{zns}:amend/#{zns}:requests/#{zns}:AmendOptions/#{zns}:GenerateInvoice").
-        with_value(true)
+      xml.should have_xml("//env:Body/#{zns}:amend/#{zns}:requests/#{zns}:AmendOptions/#{zns}:GenerateInvoice[text()='true']")
     end
 
     it "supports preview options" do
@@ -76,8 +72,7 @@ describe Zuora::Objects::AmendRequest do
       end
 
       xml = Zuora::Api.instance.last_request
-      xml.should have_xml("//env:Body/#{zns}:amend/#{zns}:requests/#{zns}:PreviewOptions/#{zns}:EnablePreviewMode").
-        with_value(true)
+      xml.should have_xml("//env:Body/#{zns}:amend/#{zns}:requests/#{zns}:PreviewOptions/#{zns}:EnablePreviewMode[text()='true']")
     end
 
     it "supports a rate plan with multiple charges" do

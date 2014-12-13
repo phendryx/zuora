@@ -77,14 +77,13 @@ module Zuora
     # @param xml_body [String] string xml body pass to the operation
     # @yield [Builder] xml builder instance
     # @raise [Zuora::Fault]
-      authenticate! if !authenticated? ||  == true
-
     def request(method, options={}, &block)
       authenticate! unless authenticated? && Zuora::Api.instance.config.cache_authentication_token
 
       if block_given?
         xml = Builder::XmlMarkup.new
         yield xml
+        @last_request = xml
         options[:message] = xml.target!
       end
 

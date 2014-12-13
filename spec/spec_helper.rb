@@ -10,7 +10,7 @@ Dir["#{File.dirname(__FILE__)}/../spec/support/**/*.rb"].sort.each { |ext| requi
 Dir["#{File.dirname(__FILE__)}/../spec/factories/*.rb"].sort.each { |ext| require ext }
 
 RSpec.configure do |c|
-  #c.fail_fast = true
+  I18n.enforce_available_locales = true
   c.include FactoryGirl::Syntax::Methods
   c.include Namespace
 end
