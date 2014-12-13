@@ -8,11 +8,16 @@ module Zuora
 		
 	    def zuora_camelize
         if match(/__c$/)
-          self.gsub("__c","").zuora_camelize + "__c"
+          self.strip_custom_field_appendix.zuora_camelize + "__c"
         else
           camelize
         end
       end unless method_defined?(:zuora_camelize)
+      
+      def strip_custom_field_appendix
+        self.gsub("__c","")
+      end
+
     end
   end
 end

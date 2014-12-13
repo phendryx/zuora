@@ -34,6 +34,18 @@ module Zuora
               @#{attr} = value
             end
           EVAL
+
+          # All custom fields in zuora get an automatic __c appendix. Creates alias
+          # methods so that those fields can be accessed like all others without the
+          # zuora imposed appendix.
+          if attr.to_s.match(/__c$/)
+            accessor_name = attr.to_s.strip_custom_field_appendix
+
+            class_eval <<-EVAL
+              alias_method "#{accessor_name}", "#{attr}"
+              alias_method "#{accessor_name}=", "#{attr}="
+            EVAL
+          end
         end
 
         # generate association overrides for complex object handling
