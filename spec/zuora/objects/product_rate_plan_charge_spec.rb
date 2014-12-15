@@ -21,15 +21,15 @@ describe Zuora::Objects::ProductRatePlanCharge do
         subject.product_rate_plan_charge_tiers.size.should == 2
       end
 
-      xml = Zuora::Api.instance.last_request
-      xml.should have_xml("//env:Body/#{zns}:query/#{zns}:queryString")
+      xml = Zuora::Api.instance.last_request.xml
+      xml.should include("<#{zns}:queryString>select ")
     end
 
     it "should not include complex attributes in the request" do
       MockResponse.responds_with(:product_rate_plan_charge_tier_find_success) do
         subject.class.find('example')
       end
-      xml = Zuora::Api.instance.last_request
+      xml = Zuora::Api.instance.last_request.xml
       xml.should_not =~ /ProductRatePlanChargeTierData/
     end
   end
@@ -58,7 +58,7 @@ describe Zuora::Objects::ProductRatePlanCharge do
     end
 
     # new objects should have empty association
-    @prpc.product_rate_plan_charge_tiers.should == []
+    @prpc.product_rate_plan_charge_tiers.should eq([])
 
     tier1 = Zuora::Objects::ProductRatePlanChargeTier.new do |t|
       t.price = 0
@@ -82,12 +82,12 @@ describe Zuora::Objects::ProductRatePlanCharge do
       @prpc.should_not be_new_record
     end
 
-    xml = Zuora::Api.instance.last_request
-    xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:ProductRatePlanChargeTierData")
-    xml.should have_xml("//#{ons}:ProductRatePlanChargeTierData/#{zns}:ProductRatePlanChargeTier")
-    xml.should have_xml("//#{zns}:ProductRatePlanChargeTier/#{ons}:Price[text()='60']")
-    xml.should have_xml("//#{zns}:ProductRatePlanChargeTier/#{ons}:StartingUnit[text()='11']")
-    xml.should have_xml("//#{zns}:ProductRatePlanChargeTier/#{ons}:EndingUnit[text()='20']")
+    xml = Zuora::Api.instance.last_request.xml
+    xml.should include("#{ons}:ProductRatePlanChargeTierData")
+    xml.should include("<#{ons}:ProductRatePlanChargeTierData><#{zns}:ProductRatePlanChargeTier")
+    xml.should include("<#{ons}:Price>50</#{ons}:Price>")
+    xml.should include("<#{ons}:StartingUnit>11")
+    xml.should include("<#{ons}:EndingUnit>20")
 
     MockResponse.responds_with(:product_rate_plan_charge_tier_find_success) do
       @prpct = @prpc.product_rate_plan_charge_tiers
@@ -103,19 +103,18 @@ describe Zuora::Objects::ProductRatePlanCharge do
       @prpc.save.should == true
     end
 
-    xml = Zuora::Api.instance.last_request
-    xml.should have_xml("//env:Body/#{zns}:update/#{zns}:zObjects/#{ons}:ProductRatePlanChargeTierData")
-    xml.should have_xml("//env:Body/#{zns}:update/#{zns}:zObjects/#{ons}:Id")
-    xml.should have_xml("//#{ons}:ProductRatePlanChargeTierData/#{zns}:ProductRatePlanChargeTier")
-    xml.should have_xml("//#{zns}:ProductRatePlanChargeTier/#{ons}:Price[text()='20']")
-    xml.should have_xml("//#{zns}:ProductRatePlanChargeTier/#{zns}:Id")
+    xml = Zuora::Api.instance.last_request.xml
+    xml.should include("#{ons}:ProductRatePlanChargeTierData")
+    xml.should include("#{ons}:Id")
+    xml.should include("<#{ons}:ProductRatePlanChargeTierData><#{zns}:ProductRatePlanChargeTier")
+    xml.should include("<#{ons}:Price>20</#{ons}:Price>")
     
     MockResponse.responds_with(:product_rate_plan_charge_destroy_success) do
       @prpc.destroy
     end
 
-    xml = Zuora::Api.instance.last_request
-    xml.should have_xml("//env:Body/#{zns}:delete/#{zns}:type[text()='ProductRatePlanCharge']")
-    xml.should have_xml("//env:Body/#{zns}:delete/#{zns}:ids[text()='4028e48834aa10a30134aaf7f40b3139']")
+    xml = Zuora::Api.instance.last_request.xml
+    xml.should include("<#{zns}:type>ProductRatePlanCharge</#{zns}:type>")
+    xml.should include("<#{zns}:ids>4028e48834aa10a30134aaf7f40b3139</#{zns}:ids>")
   end
 end

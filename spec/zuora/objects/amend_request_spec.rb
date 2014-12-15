@@ -32,10 +32,10 @@ describe Zuora::Objects::AmendRequest do
         amnd_resp[:success].should == true
       end
 
-      xml = Zuora::Api.instance.last_request
-      xml.should have_xml("//env:Body/#{zns}:amend/#{zns}:requests/#{zns}:Amendments/#{ons}:Type[text()='New Product']")
-      xml.should have_xml("//env:Body/#{zns}:amend/#{zns}:requests/#{zns}:Amendments/#{ons}:Name[text()='Example Amendment 1']")
-      xml.should have_xml("//env:Body/#{zns}:amend/#{zns}:requests/#{zns}:Amendments/#{ons}:RatePlanData/#{zns}:RatePlan/#{ons}:ProductRatePlanId[text()='4028e48834aa10a30134c50f40901ea7']")
+      xml = Zuora::Api.instance.last_request.xml
+      xml.should include("<#{ons}:Type>NewProduct</#{ons}:Type>")
+      xml.should include("<#{ons}:Name>Example Amendment 1</#{ons}:Name>")
+      xml.should include("<#{ons}:ProductRatePlanId>4028e48834aa10a30134c50f40901ea7</#{ons}:ProductRatePlanId>")
     end
 
     it "handles applying amend failures messages" do
@@ -58,8 +58,8 @@ describe Zuora::Objects::AmendRequest do
         amnd_resp[:success].should == true
       end
 
-      xml = Zuora::Api.instance.last_request
-      xml.should have_xml("//env:Body/#{zns}:amend/#{zns}:requests/#{zns}:AmendOptions/#{zns}:GenerateInvoice[text()='true']")
+      xml = Zuora::Api.instance.last_request.xml
+      xml.should include("<#{zns}:GenerateInvoice>true</#{zns}:GenerateInvoice>")
     end
 
     it "supports preview options" do
@@ -71,8 +71,8 @@ describe Zuora::Objects::AmendRequest do
         amnd_resp[:success].should == true
       end
 
-      xml = Zuora::Api.instance.last_request
-      xml.should have_xml("//env:Body/#{zns}:amend/#{zns}:requests/#{zns}:PreviewOptions/#{zns}:EnablePreviewMode[text()='true']")
+      xml = Zuora::Api.instance.last_request.xml
+      xml.should include("<#{zns}:EnablePreviewMode>true</#{zns}:EnablePreviewMode>")
     end
 
     it "supports a rate plan with multiple charges" do
@@ -89,8 +89,8 @@ describe Zuora::Objects::AmendRequest do
         sub_resp = subject.create
         sub_resp[:success].should == true
       end
-      xml = Zuora::Api.instance.last_request
-      xml.should have_xml("//env:Body/#{zns}:amend/#{zns}:requests/#{zns}:Amendments/#{ons}:RatePlanData")
+      xml = Zuora::Api.instance.last_request.xml
+      xml.should include("<#{ons}:RatePlanData>")
     end
 
   end  
