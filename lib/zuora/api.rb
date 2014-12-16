@@ -13,19 +13,11 @@ module Zuora
   def self.configure(opts={})
     Api.instance.config = Config.new(opts)
 
-    # HTTPI.logger = opts[:logger]
-    # HTTPI.log = opts[:logger] ? true : false
-    # Savon.configure do |savon|
-    #   savon.log = opts[:logger] ? true : false
-    #   savon.logger = opts[:logger]
-    #   savon.pretty_print_xml = opts[:format_xml]
-    #   savon.soap_version = 2
-    # end
-
     if Api.instance.config.sandbox
       Api.instance.sandbox!
     end
-    Api.instance.config.cache_authentication_token = true
+    
+    Api.instance.config.reuse_authentication_token = true if Api.instance.config.reuse_authentication_token.nil?
   end
 
   class Api
@@ -61,7 +53,7 @@ module Zuora
     # Is this an authenticated session?
     # @return [Boolean]
     def authenticated?
-      self.session.try(:active?)
+      Api.instance.config.reuse_authentication_token && self.session.try(:active?)
     end
 
     # Change client to sandbox url
@@ -78,7 +70,7 @@ module Zuora
     # @yield [Builder] xml builder instance
     # @raise [Zuora::Fault]
     def request(method, options={}, &block)
-      authenticate! unless authenticated? && Zuora::Api.instance.config.cache_authentication_token
+      authenticate! unless authenticated?
 
       if block_given?
         xml = Builder::XmlMarkup.new

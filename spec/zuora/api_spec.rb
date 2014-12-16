@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Zuora::Api do
   describe "configuration" do
-    before do
+    before(:each) do
       Zuora::Api.any_instance.stub(:authenticated?).and_return(true)
     end
 
@@ -33,6 +33,33 @@ describe Zuora::Api do
         Zuora::Api.instance.authenticate!
       end
     end
+  end
+
+  describe "reuse authentication token flag" do
+    it "can be configured false" do
+      Zuora.configure(reuse_authentication_token: false)
+      Zuora::Api.instance.config.should be_a_kind_of(Zuora::Config)
+      Zuora::Api.instance.config.reuse_authentication_token.should be false
+    end
+
+    it "defaults to true" do
+      Zuora.configure()
+      Zuora::Api.instance.config.should be_a_kind_of(Zuora::Config)
+      Zuora::Api.instance.config.reuse_authentication_token.should be true
+      Zuora.configure(reuse_authentication_token: false)
+      Zuora::Api.instance.config.reuse_authentication_token.should be false
+    end
+
+    it "does not store authenticated state if not caching auth token" do
+      Zuora.configure(username: 'example', password: 'test', reuse_authentication_token: false)
+
+      MockResponse.responds_with(:valid_login) do
+        Zuora::Api.instance.authenticate!
+      end
+
+      Zuora::Api.instance.should_not be_authenticated
+    end
+    
   end
 
   describe "authentication" do
