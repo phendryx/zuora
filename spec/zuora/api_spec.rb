@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Zuora::Api do
   describe "configuration" do
-    before do
+    before(:each) do
       Zuora::Api.any_instance.stub(:authenticated?).and_return(true)
     end
 
@@ -12,7 +12,7 @@ describe Zuora::Api do
 
     it "can be configured to use sandbox WSDL" do
       Zuora.configure(:username => 'example', :password => 'test', :sandbox => true)
-      Zuora::Api.instance.client.wsdl.endpoint.to_s.should == "https://apisandbox.zuora.com/apps/services/a/55.0"
+      Zuora::Api.instance.client.globals[:endpoint].to_s.should == "https://apisandbox.zuora.com/apps/services/a/63.0"
     end
 
     it "can be configured multiple times" do
@@ -35,6 +35,33 @@ describe Zuora::Api do
     end
   end
 
+  describe "reuse authentication token flag" do
+    it "can be configured false" do
+      Zuora.configure(reuse_authentication_token: false)
+      Zuora::Api.instance.config.should be_a_kind_of(Zuora::Config)
+      Zuora::Api.instance.config.reuse_authentication_token.should be false
+    end
+
+    it "defaults to true" do
+      Zuora.configure()
+      Zuora::Api.instance.config.should be_a_kind_of(Zuora::Config)
+      Zuora::Api.instance.config.reuse_authentication_token.should be true
+      Zuora.configure(reuse_authentication_token: false)
+      Zuora::Api.instance.config.reuse_authentication_token.should be false
+    end
+
+    it "does not store authenticated state if not caching auth token" do
+      Zuora.configure(username: 'example', password: 'test', reuse_authentication_token: false)
+
+      MockResponse.responds_with(:valid_login) do
+        Zuora::Api.instance.authenticate!
+      end
+
+      Zuora::Api.instance.should_not be_authenticated
+    end
+    
+  end
+
   describe "authentication" do
     it "creates Zuora::Session instance when successful" do
       MockResponse.responds_with(:valid_login) do
@@ -48,16 +75,16 @@ describe Zuora::Api do
       MockResponse.responds_with(:invalid_login, 500) do
         lambda do
           Zuora.configure(:username => 'example', :password => 'test')
-          Zuora::Api.instance.request(:example)
+          Zuora::Api.instance.authenticate!
         end.should raise_error(Zuora::Fault)
       end
     end
 
     it "raises exception when IOError is found" do
-      Zuora::Api.instance.client.should_receive(:request).and_raise(IOError.new)
+      Zuora::Api.instance.client.should_receive(:call).and_raise(IOError.new)
       Zuora.configure(:username => 'example', :password => 'test')
       lambda do
-        Zuora::Api.instance.request(:example)
+        Zuora::Api.instance.request(:query)
       end.should raise_error(Zuora::Fault)
     end
   end
