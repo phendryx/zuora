@@ -34,6 +34,18 @@ module Zuora
               @#{attr} = value
             end
           EVAL
+
+          # All custom fields in zuora get an automatic __c appendix. Creates alias
+          # methods so that those fields can be accessed like all others without the
+          # zuora imposed appendix.
+          if attr.to_s.match(/__c$/)
+            accessor_name = attr.to_s.strip_custom_field_appendix
+
+            class_eval <<-EVAL
+              alias_method "#{accessor_name}", "#{attr}"
+              alias_method "#{accessor_name}=", "#{attr}="
+            EVAL
+          end
         end
 
         # generate association overrides for complex object handling
@@ -135,7 +147,7 @@ module Zuora
       def inherited(subclass)
         super
         xpath = "//xs:complexType[@name='#{subclass.remote_name}']//xs:sequence/xs:element"
-        document = Zuora::Api.instance.client.wsdl.parser.instance_variable_get('@document')
+        document = Zuora::Api.instance.wsdl.parser.instance_variable_get('@document')
         q = document.xpath(xpath, 's0' => 'http://schemas.xmlsoap.org/wsdl/', 'xs' => 'http://www.w3.org/2001/XMLSchema')
         wsdl_attrs = (q.map{|e| e.attributes['name'].value.underscore.to_sym }) << :id
         subclass.send(:class_variable_set, :@@wsdl_attributes,  wsdl_attrs)

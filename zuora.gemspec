@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.extra_rdoc_files = [ "README.md" ]
 
-  s.add_runtime_dependency "savon", ">= 0.9.8", "<= 1.1.0"
+  s.add_runtime_dependency "savon", ">= 2.0.0", "<= 2.8.0"
   s.add_runtime_dependency "activesupport", ">= 3.0.0", "< 4.0.0"
   s.add_runtime_dependency "activemodel", ">= 3.0.0", "< 4.0.0"
   s.add_runtime_dependency "libxml4r", "~> 0.2.6"
