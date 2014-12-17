@@ -44,7 +44,7 @@ module Zuora::Objects
     validates_numericality_of :discount_percentage, :allow_nil => true, :greater_than => 0
     validates_numericality_of :dmrc, :allow_nil => true
     validates_numericality_of :dtcv, :allow_nil => true
-    validates_datetime_of     :effective_end_date
+    validates_datetime_of     :effective_end_date, :allow_nil => true
     validates_datetime_of     :effective_start_date
     validates_numericality_of :included_units, :greater_than => 0, :if => Proc.new { |rpc| ['Overage','Tiered with Overage Pricing'].include?(rpc.charge_model) }
     validates_inclusion_of    :is_last_segment, :in => [true, false], :allow_nil => true
@@ -62,7 +62,7 @@ module Zuora::Objects
     validates_numericality_of :rollover_balance, :allow_nil => true
     validates_numericality_of :segment, :integer_only => true, :greater_than_or_equal_to => 1
     validates_numericality_of :specific_billing_period, :only_integer => true, :if => Proc.new { |rpc| rpc.billing_period == 'Specific Months' }
-    validates_numericality_of :tcv
+    validates_numericality_of :tcv, :allow_nil => true
     validates_datetime_of     :trigger_date, :allow_nil => true
     validates_inclusion_of    :trigger_event, :in => %w(ContractEffective CustomerAcceptance ServiceActivation SpecificDate)
     validates_numericality_of :unused_units_credit_rates, :if => Proc.new { |rpc| ['Overage','Tiered with Overage Pricing'].include?(rpc.charge_model) }

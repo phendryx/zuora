@@ -114,9 +114,9 @@ module Zuora
         wsdl: WSDL, 
         soap_version: SOAP_VERSION, 
         log: config.log || false, 
-        logger: config.logger, 
+        logger: config.logger,
         ssl_verify_mode: :none,
-        pretty_print_xml: config.format_xml,
+        pretty_print_xml: config.log ? config.format_xml : false,
         filters: [:password]
       )
     end
