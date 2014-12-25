@@ -1882,7 +1882,7 @@
 	</binding>
 	<service name="ZuoraService">
 		<port name="Soap" binding="zns:SoapBinding">
-			<soap:address location="https://www.zuora.com/apps/services/a/63.0" /> 
+			<soap:address location="https://www.zuora.com/apps/services/a/63.0" />
 		</port>
 	</service>
 </definitions>
