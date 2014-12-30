@@ -81,8 +81,8 @@ describe Zuora::Api do
     end
 
     it "raises exception when IOError is found" do
-      Zuora::Api.instance.client.should_receive(:call).and_raise(IOError.new)
       Zuora.configure(:username => 'example', :password => 'test')
+      Zuora::Api.instance.client.should_receive(:call).and_raise(IOError.new)
       lambda do
         Zuora::Api.instance.request(:query)
       end.should raise_error(Zuora::Fault)

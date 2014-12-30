@@ -12,12 +12,15 @@ module Zuora
   # @return [Config]
   def self.configure(opts={})
     Api.instance.config = Config.new(opts)
+    
+    Api.instance.config.reuse_authentication_token = true if Api.instance.config.reuse_authentication_token.nil?
 
     if Api.instance.config.sandbox
       Api.instance.sandbox!
+    else
+      # If not in sandbox mode, force the Savon client to reinitialize so that logging works properly
+      Api.instance.reinitialize_client!
     end
-    
-    Api.instance.config.reuse_authentication_token = true if Api.instance.config.reuse_authentication_token.nil?
   end
 
   class Api
@@ -27,6 +30,11 @@ module Zuora
     # @return [Savon::Client]
     def client
       @client ||= make_client
+    end
+    
+    def reinitialize_client!
+      @client = nil
+      Api.instance.sandbox! if Api.instance.config.sandbox
     end
 
     # @return [Zuora::Session]
@@ -113,10 +121,10 @@ module Zuora
       Savon.client(
         wsdl: WSDL, 
         soap_version: SOAP_VERSION, 
-        log: config.log || false, 
-        logger: config.logger,
+        log: Zuora::Api.instance.config.log || false, 
+        logger: Zuora::Api.instance.config.logger,
         ssl_verify_mode: :none,
-        pretty_print_xml: config.log ? config.format_xml : false,
+        pretty_print_xml: Zuora::Api.instance.config.log ? Zuora::Api.instance.config.format_xml : false,
         filters: [:password]
       )
     end
