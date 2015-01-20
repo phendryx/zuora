@@ -18,13 +18,13 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = [ "README.md" ]
 
   s.add_runtime_dependency "savon", ">= 2.0.0", "<= 2.8.0"
-  s.add_runtime_dependency "activesupport", ">= 3.0.0", "< 4.0.0"
-  s.add_runtime_dependency "activemodel", ">= 3.0.0", "< 4.0.0"
+  s.add_runtime_dependency "activesupport", ">= 3.0.0"
+  s.add_runtime_dependency "activemodel", ">= 3.0.0"
   s.add_runtime_dependency "libxml4r", "~> 0.2.6"
 
   s.add_development_dependency "rake"
   s.add_development_dependency "guard-rspec"
-  s.add_development_dependency "debugger"
+  s.add_development_dependency "debugger2"
   s.add_development_dependency "artifice", "~> 0.6"
   s.add_development_dependency "yard", "~> 0.8"
   s.add_development_dependency "rspec"
